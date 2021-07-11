@@ -1,9 +1,37 @@
 // Function to get hand that user wants to play (or quit)
 function GetUserOption(){
+
     let userHandNum = window.prompt("Enter your hand: 0: Rock, 1: Paper, 2: Scissors, 9: Quit");
+    
+    // if-statement handles "cancel" being pressed on the prompt window
     if (userHandNum == "" || userHandNum == null) {
         userHandNum = "9";
     }
+
+    // in case user doesn't put in the number, but types in their hand
+    switch(userHandNum.toLowerCase()){
+        case "0":
+        case "rock":
+            userHandNum = "0";
+            break;
+        case "1":
+        case "paper":
+            userHandNum = "1";
+            break;
+        case "2":
+        case "scissors":
+            userHandNum = "2";
+            break;
+        case "9":
+        case "quit":
+            userHandNum = "9";
+            break;
+        default:
+            userHandNum = "9";
+            break;
+    }
+
+    // parse integer from the string returned by the prompt window
     let userHand = IntToHand(userHandNum);
 
     return userHand;
@@ -12,6 +40,7 @@ function GetUserOption(){
 
 // Function to randmoly generate a computer hand
 function ComputerPlay(){
+
     let randNum = Math.floor(Math.random() * 3);
     let computerHand = IntToHand(randNum);
 
@@ -21,6 +50,7 @@ function ComputerPlay(){
 
 // Function to convert generated inputs into a String of the hand being played
 function IntToHand(num){
+
     let hand = "";
     switch(parseInt(num)) {
         case 9:
@@ -43,6 +73,7 @@ function IntToHand(num){
 
 // Function to compare hands and determine winner - results logged to console
 function CompareHands(hand1, hand2){
+
     if (hand1 == hand2){
         console.log(`You and the computer both had ${hand1}, so you tied.`);
     }
@@ -80,13 +111,13 @@ let compWins = 0;
 function run() { 
 // Get users first input
     let userHand = GetUserOption();
-    console.log(`User Hand: ${userHand}.`);
 
     // Loop to continue gameplay until 
     while (userHand !== "Quit") {
         let computerHand = ComputerPlay();
+        console.log(`Your Hand: ${userHand}, Computer Hand: ${computerHand}`);
         CompareHands(userHand, computerHand);
-        console.log(`Computer Wins: ${compWins}, Your Wins: ${userWins}.`)
+        console.log(`Your Wins: ${userWins}, Computer Wins: ${compWins}.`)
         userHand = GetUserOption();
     } 
 }
