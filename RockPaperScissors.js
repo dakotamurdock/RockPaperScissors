@@ -1,43 +1,3 @@
-// Function to get hand that user wants to play (or quit)
-function GetUserOption(){
-
-    let userHandNum = window.prompt("Enter your hand: 0: Rock, 1: Paper, 2: Scissors, 9: Quit");
-    
-    // if-statement handles "cancel" being pressed on the prompt window
-    if (userHandNum == "" || userHandNum == null) {
-        userHandNum = "9";
-    }
-
-    // in case user doesn't put in the number, but types in their hand
-    switch(userHandNum.toLowerCase()){
-        case "0":
-        case "rock":
-            userHandNum = "0";
-            break;
-        case "1":
-        case "paper":
-            userHandNum = "1";
-            break;
-        case "2":
-        case "scissors":
-            userHandNum = "2";
-            break;
-        case "9":
-        case "quit":
-            userHandNum = "9";
-            break;
-        default:
-            userHandNum = "9";
-            break;
-    }
-
-    // parse integer from the string returned by the prompt window
-    let userHand = IntToHand(userHandNum);
-
-    return userHand;
-}
-
-
 // Function to randmoly generate a computer hand
 function ComputerPlay(){
 
@@ -72,52 +32,87 @@ function IntToHand(num){
 
 
 // Function to compare hands and determine winner - results logged to console
-function CompareHands(hand1, hand2){
+function CompareHands(hand1){
+
+    hand2 = ComputerPlay();
 
     if (hand1 == hand2){
-        console.log(`You and the computer both had ${hand1}, so you tied.`);
+        hand.textContent = `You and the computer both had ${hand1}, so you tied.`;
     }
     else if (hand1 == "Rock" && hand2 == "Scissors") {
-        console.log("You win! Rock beats Scissors.");
+        hand.textContent = "You win! Rock beats Scissors.";
         ++userWins;
     }
     else if (hand1 == "Scissors" && hand2 == "Rock") {
-        console.log("You lose! Rock beats Scissors");
+        hand.textContent = "You lose! Rock beats Scissors";
         ++compWins;
     }
     else if (hand1 == "Paper" && hand2 == "Scissors") {
-        console.log("You lose! Scissors beats Paper.");
+        hand.textContent = "You lose! Scissors beats Paper.";
         ++compWins;
     }
     else if (hand1 == "Scissors" && hand2 == "Paper") {
-        console.log("You win! Scissors beats Paper.");
+        hand.textContent = "You win! Scissors beats Paper.";
         ++userWins;
     }
     else if (hand1 == "Rock" && hand2 == "Paper") {
-        console.log("You lose! Paper beats Rock.");
+        hand.textContent = "You lose! Paper beats Rock.";
         ++compWins;
     }
     else if (hand1 == "Paper" && hand2 == "Rock") {
-        console.log("You win! Paper beat Rock.");
+        hand.textContent = "You win! Paper beat Rock.";
         ++userWins;
     }
+
+    container.appendChild(hand);
 }
 
-// Keep track of results
+
+function clear() {
+    rockBtn.remove();
+    paperBtn.remove();
+    scissorsBtn.remove();
+    hand.textContent = `Game over! You won ${userWins} times, and the computer won ${compWins} times.`;
+    container.appendChild(newGameButton);
+    userWins = 0;
+    compWins = 0;
+}
+
+
+const container = document.querySelector('#container');
+const newGameButton = document.getElementById("newGame");
+const rockBtn = document.createElement('button');
+const paperBtn = document.createElement('button');
+const scissorsBtn = document.createElement('button');
+rockBtn.innerHTML = "Rock";
+paperBtn.innerHTML = "Paper";
+scissorsBtn.innerHTML = "Scissors";
+rockBtn.type = "button";
+paperBtn.type = "button";
+scissorsBtn.type = "button";
+rockBtn.id = "0";
+paperBtn.id = "1";
+scissorsBtn.id = "2";
 let userWins = 0;
 let compWins = 0;
+const hand = document.createElement('div');
+hand.classList.add('hand');
 
 
 function run() { 
-// Get users first input
-    let userHand = GetUserOption();
-
-    // Loop to continue gameplay until 
-    while (userHand !== "Quit") {
-        let computerHand = ComputerPlay();
-        console.log(`Your Hand: ${userHand}, Computer Hand: ${computerHand}`);
-        CompareHands(userHand, computerHand);
-        console.log(`Your Wins: ${userWins}, Computer Wins: ${compWins}.`)
-        userHand = GetUserOption();
-    } 
+    newGameButton.remove();
+    hand.textContent = "";
+    container.appendChild(rockBtn);
+    container.appendChild(paperBtn);
+    container.appendChild(scissorsBtn);
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+            CompareHands(IntToHand(button.id));
+            console.log(compWins + " " + userWins);
+            if (compWins == 5 || userWins == 5) {
+                clear();
+            }
+        });
+    });
 }
